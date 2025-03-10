@@ -15,6 +15,22 @@ Summary is found on top of this README.md
 Timeline and task breakdown/assignment is found in info/timeline.md  
 Deliverables for milestones 1 and 2 is referred in previous part of README.md  
 
+### Updates:
+TrainerPokemon's level attribute has change its name to pokemon_level  
+
+### Queries to test database:
+SELECT * FROM Item;  
+DESCRIBE Item;  
+DESCRIBE hasItem;  
+SELECT * FROM Trainer;  
+SELECT * FROM EvolutionReq;  
+SELECT * FROM Pokemon1;  
+SELECT p1.to_pokedex_id, p1.pokemon_name, p1.from_pokedex_id, e.method
+FROM Pokemon1 p1
+LEFT JOIN EvolutionReq e ON p1.req_name = e.req_name
+START WITH p1.to_pokedex_id = 4
+CONNECT BY PRIOR p1.to_pokedex_id = p1.from_pokedex_id;
+
 ### AI Acknowledgement:  
 We did not make use of AI for this milestone of the project.  
 
