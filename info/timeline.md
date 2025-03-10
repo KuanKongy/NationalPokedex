@@ -1,6 +1,6 @@
 ### Week 1: Database Setup & Documentation
-- [ ] README: Draft initial version with project details not covered in other deliverables. [Nam]
-- [ ] SQL Script: Design and write SQL script to create tables and insert sample data. [Nam]
+- [x] README: Draft initial version with project details not covered in other deliverables. [Nam]
+- [x] SQL Script: Design and write SQL script to create tables and insert sample data. [Nam]
 - [ ] Review: Test database creation and ensure data integrity. [Jas and Abigail]
 
 ### Week 2: Query Implementation & Testing
