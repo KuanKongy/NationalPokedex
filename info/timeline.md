@@ -3,6 +3,7 @@
 - [x] SQL Script: Design and write SQL script to create tables and insert sample data. [Nam]
 - [ ] Review: Test database creation and ensure data integrity. [Jas and Abigail]
 - [ ] Write 10 Queries: Implement all required queries. [1-4: Nam, 5-7: Jas, 8-10: Abigail]
+
 - [ ] Test Queries: Ensure correctness, optimize for performance, and check edge cases. [All]
 
 ### Week 2: GUI Design & Implementation & Error Handling
