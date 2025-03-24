@@ -2,7 +2,7 @@
 - [x] README: Draft initial version with project details not covered in other deliverables. [Nam]
 - [x] SQL Script: Design and write SQL script to create tables and insert sample data. [Nam]
 - [x] Review: Test database creation and ensure data integrity. [Nam]
-- [ ] Meet with Matthew [All]
+- [x] Meet with Matthew [All]
 - [ ] Write 10 Queries: [Nam: 4, Jas: 3, Abigail: 3]  
 Nam: Aggregation with GROUP BY, Aggregation with HAVING, Nested aggregation with GROUP BY, Division  
 Jas: Selection, Projection, Join  
