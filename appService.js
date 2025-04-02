@@ -915,18 +915,60 @@ async function projectTrainerPokemon(selectedAttributes) {
     });
 }
 
+async function projectRegions() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Region`);
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function projectTypes() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Type`);
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function projectMoves() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Move`);
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function projectAbilities() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Ability`);
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////// 6. Join
 async function joinRegionRoute(region_name) {
-    return await withOracleDB(async (connection) => {;
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 r.region_name, 
-                r.region_description, 
+                r.climate, 
+                r.theme, 
                 route.route_name, 
                 route.terrain_type, 
                 route.difficulty_level
             FROM Region r
-            JOIN Route1 r1 ON r.region_name = r1.region_name
+            JOIN leadsTo r1 ON r.region_name = r1.region_name
             JOIN Route route ON r1.route_name = route.route_name
             WHERE r.region_name = :region_name`,
             {region_name}
@@ -939,7 +981,7 @@ async function joinRegionRoute(region_name) {
 }
 
 async function joinRouteWildPokemon(route_name) {
-    return await withOracleDB(async (connection) => {;
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 wpv.pokedex_id, 
@@ -964,7 +1006,7 @@ async function joinRouteWildPokemon(route_name) {
 }
 
 async function joinTrainerItem(trainer_id) {
-    return await withOracleDB(async (connection) => {;
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 t.trainer_id, 
@@ -972,6 +1014,7 @@ async function joinTrainerItem(trainer_id) {
                 hi.item_name
             FROM Trainer t
             JOIN hasItem hi ON t.trainer_id = hi.trainer_id
+            JOIN Item i ON i.item_name = hi.item_name
             WHERE t.trainer_id = :trainer_id`,
             {trainer_id}
         );
@@ -983,7 +1026,7 @@ async function joinTrainerItem(trainer_id) {
 }
 
 async function joinTrainerCollection(trainer_id) {
-    return await withOracleDB(async (connection) => {;
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 t.trainer_id, 
@@ -1004,8 +1047,8 @@ async function joinTrainerCollection(trainer_id) {
     });
 }
 
-async function joinTrainerCollection(trainer_id, collection_number) {
-    return await withOracleDB(async (connection) => {;
+async function joinCollectionTrainerPokemon(trainer_id, collection_number) {
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 c.collection_number, 
@@ -1030,42 +1073,80 @@ async function joinTrainerCollection(trainer_id, collection_number) {
     });
 }
 
-async function joinTrainerCollection(trainer_id, collection_number) {
-    return await withOracleDB(async (connection) => {;
-        const result = await connection.execute(
-            `SELECT 
-                c.collection_number, 
-                c.collection_name, 
-                c.trainer_id, 
-                c.collection_category, 
-                c.collection_size, 
-                tp.pokedex_id, 
-                tp.pet_name, 
-                tp.pokemon_level, 
-                tp.experience
-            FROM Collection c
-            JOIN TrainerPokemon tp 
-            ON c.trainer_id = tp.trainer_id AND c.collection_number = tp.collection_number
-            WHERE c.trainer_id = :trainer_id AND c.collection_number = :collection_number`,
-            {trainer_id, collection_number}
-        );
-
-        return result.rows;
-    }).catch(() => {
-        return false;
-    });
-}
-
-async function joinPokemonType(trainer_id, collection_number) {
-    return await withOracleDB(async (connection) => {;
+async function joinPokemonType(pokedex_id) {
+    return await withOracleDB(async (connection) => {
         const result = await connection.execute(
             `SELECT 
                 p.pokedex_id, 
                 p.pokemon_name, 
-                pt.type_name
+                ht.type_name
             FROM Pokemon p
-            JOIN PokemonType pt ON p.pokedex_id = pt.pokedex_id;`,
-            {trainer_id, collection_number}
+            JOIN hasType ht ON p.pokedex_id = ht.pokedex_id
+            JOIN Type t ON ht.type_name = t.type_name
+            WHERE p.pokedex_id = :pokedex_id`,
+            {pokedex_id}
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function joinPokemonMove(pokedex_id) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT 
+                p.pokedex_id, 
+                p.pokemon_name, 
+                hm.move_name
+            FROM Pokemon p
+            JOIN hasMove hm ON p.pokedex_id = hm.pokedex_id
+            JOIN Move m ON hm.move_name = m.move_name
+            WHERE p.pokedex_id = :pokedex_id`,
+            {pokedex_id}
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function joinPokemonAbility(pokedex_id) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT 
+                p.pokedex_id, 
+                p.pokemon_name, 
+                at.ability_name
+            FROM Pokemon p
+            JOIN ableTo at ON p.pokedex_id = at.pokedex_id
+            JOIN Ability a ON at.ability_name = a.ability_name
+            WHERE p.pokedex_id = :pokedex_id`,
+            {pokedex_id}
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getEvolutionChain(pokedex_id) {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT p.pokedex_id, p.pokemon_name, p.from_pokedex_id, e.method 
+            FROM Pokemon p
+            LEFT JOIN EvolutionReq e ON p.req_name = e.req_name
+            WHERE p.pokedex_id IN (
+                SELECT pokedex_id FROM WildPokemonView
+                UNION 
+                SELECT :pokedex_id FROM DUAL
+            )
+            START WITH p.pokedex_id = :pokedex_id
+            CONNECT BY PRIOR p.pokedex_id = p.from_pokedex_id`,
+            {pokedex_id}
         );
 
         return result.rows;
@@ -1076,12 +1157,219 @@ async function joinPokemonType(trainer_id, collection_number) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////// 7. Aggregation with GROUP BY
+async function getPokemonAvgByType() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT ht.type_name, 
+                AVG(p.hp) AS avg_hp, 
+                AVG(p.attack) AS avg_attack, 
+                AVG(p.defence) AS avg_defense, 
+                AVG(p.special_attack) AS avg_special_attack, 
+                AVG(p.special_defence) AS avg_special_defense, 
+                AVG(p.speed) AS avg_speed, 
+                AVG(p.total) AS avg_total,
+                COUNT(*) AS num_pokemon
+            FROM hasType ht
+            JOIN Pokemon p ON ht.pokedex_id = p.pokedex_id
+            GROUP BY ht.type_name`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getCountPokemonByRegion() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT r.region_name, COUNT(f.pokedex_id) AS num_pokemon
+            FROM foundAt f
+            JOIN Route1 ro ON f.route_name = ro.route_name
+            JOIN leadsTo l ON ro.route_name = l.route_name
+            JOIN Region r ON l.region_name = r.region_name
+            GROUP BY r.region_name
+            ORDER BY num_pokemon DESC`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getRegionCountTrainer() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT region_name, COUNT(trainer_id) AS trainer_count
+            FROM Trainer
+            GROUP BY region_name
+            ORDER BY trainer_count DESC`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////// 8. Aggregation with HAVING
+async function getPokemonFoundMoreOneRoute() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT pokedex_id, COUNT(route_name) AS num_routes
+            FROM foundAt
+            GROUP BY pokedex_id
+            HAVING COUNT(route_name) > 1`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getTypeMoreThreePokemon() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT type_name, COUNT(*) AS pokemon_count
+            FROM Pokemon p
+            JOIN hasType ht ON ht.pokedex_id = p.pokedex_id
+            GROUP BY type_name
+            HAVING COUNT(*) > 3`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////// 9. Nested Aggregation with GROUP BY
+async function getPokemonHighAvgByType() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT ht.type_name, AVG(p.total) AS total_avg
+            FROM Pokemon p
+            JOIN hasType ht ON ht.pokedex_id = p.pokedex_id
+            GROUP BY ht.type_name
+            HAVING AVG(p.total) <= (SELECT AVG(p1.total) FROM Pokemon p1)`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getRegionCountAboveAvg() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT R.region_name, COUNT(F.pokedex_id) AS spawn_count
+            FROM leadsTo L
+            JOIN foundAt F ON L.route_name = F.route_name
+            JOIN Region R ON L.region_name = R.region_name
+            GROUP BY R.region_name
+            HAVING COUNT(F.pokedex_id) > (
+                SELECT AVG(spawn_count) FROM (
+                    SELECT COUNT(pokedex_id) AS spawn_count
+                    FROM foundAt
+                    GROUP BY route_name
+                )
+            )`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////// 10. Division
+async function getTrainerAllLevelingGroup() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT T.trainer_id
+            FROM Trainer T
+            WHERE NOT EXISTS (
+                SELECT DISTINCT L.leveling_group FROM TrainerPokemon2 L
+                MINUS
+                SELECT DISTINCT TP.leveling_group FROM TrainerPokemon1 TP
+                WHERE TP.trainer_id = T.trainer_id
+            )`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getTrainerAllCollectionCategory() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT T.trainer_id
+            FROM Trainer T
+            WHERE NOT EXISTS (
+                SELECT DISTINCT C.collection_category FROM Collection2 C
+                MINUS
+                SELECT DISTINCT C2.collection_category FROM Collection C2
+                WHERE C2.trainer_id = T.trainer_id
+            )`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getTrainerAllItemCategory() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT T.trainer_id
+            FROM Trainer T
+            WHERE NOT EXISTS (
+                SELECT DISTINCT I.item_category FROM Item I
+                MINUS
+                SELECT DISTINCT I2.item_category FROM hasItem HI
+                JOIN Item I2 ON HI.item_name = I2.item_name
+                WHERE HI.trainer_id = T.trainer_id
+            )`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getPokemonAllMoveCategory() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT P.to_pokedex_id
+            FROM Pokemon1 P
+            WHERE NOT EXISTS (
+                SELECT DISTINCT M.move_category FROM Move2 M
+                MINUS
+                SELECT DISTINCT M2.move_category FROM hasMove HM
+                JOIN Move1 M1 ON HM.move_name = M1.move_name
+                JOIN Move2 M2 ON M1.move_effect = M2.move_effect
+                WHERE HM.pokedex_id = P.to_pokedex_id
+            )`
+        );
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
+
+
 
 
 module.exports = {
@@ -1123,5 +1411,28 @@ module.exports = {
     projectPokemon,
     projectItem,
     projectTrainerPokemon,
-    joinRouteWildPokemon
+    projectRegions,
+    projectTypes,
+    projectMoves,
+    projectAbilities,
+    joinRegionRoute,
+    joinRouteWildPokemon,
+    joinTrainerItem,
+    joinTrainerCollection,
+    joinCollectionTrainerPokemon,
+    joinPokemonType,
+    joinPokemonMove,
+    joinPokemonAbility,
+    getEvolutionChain,
+    getPokemonAvgByType,
+    getCountPokemonByRegion,
+    getRegionCountTrainer,
+    getPokemonFoundMoreOneRoute,
+    getTypeMoreThreePokemon,
+    getPokemonHighAvgByType,
+    getRegionCountAboveAvg,
+    getTrainerAllLevelingGroup,
+    getTrainerAllCollectionCategory,
+    getTrainerAllItemCategory,
+    getPokemonAllMoveCategory
 };

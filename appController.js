@@ -18,6 +18,7 @@ router.get('/check-db-connection', async (req, res) => {
 router.get('/demotable', async (req, res) => {
     const tableContent = await appService.fetchDemotableFromDb();
     res.json({data: tableContent});
+
 });
 
 router.post("/initiate-demotable", async (req, res) => {
@@ -397,7 +398,38 @@ router.get("/project-selected-trainerpokemon", async (req, res) => {
     res.json({data: projectedResult});
 });
 
+router.get("/project-regions", async (req, res) => {
+    console.log("Projecting Regions...");
+    const projectedResult = await appService.projectRegions();
+    res.json({data: projectedResult});
+});
+
+router.get("/project-types", async (req, res) => {
+    console.log("Projecting Types...");
+    const projectedResult = await appService.projectTypes();
+    res.json({data: projectedResult});
+});
+
+router.get("/project-moves", async (req, res) => {
+    console.log("Projecting Moves...");
+    const projectedResult = await appService.projectMoves();
+    res.json({data: projectedResult});
+});
+
+router.get("/project-abilities", async (req, res) => {
+    console.log("Projecting Abilities...");
+    const projectedResult = await appService.projectAbilities();
+    res.json({data: projectedResult});
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////// 6. Join
+router.get("/join-region-route-byregion", async (req, res) => {
+    console.log("Joining Region Route...");
+    const { region_name } = req.body;
+    const joinedResult = await appService.joinRegionRoute(region_name);
+    res.json({data: joinedResult});
+});
+
 router.get("/join-route-wildpokemon-byroute", async (req, res) => {
     console.log("Joining Route WildPokemon...");
     const { route_name } = req.body;
@@ -405,14 +437,123 @@ router.get("/join-route-wildpokemon-byroute", async (req, res) => {
     res.json({data: joinedResult});
 });
 
+router.get("/join-trainer-item-bytrainer", async (req, res) => {
+    console.log("Joining Trainer Item...");
+    const { trainer_id } = req.body;
+    const joinedResult = await appService.joinTrainerItem(trainer_id);
+    res.json({data: joinedResult});
+});
+
+router.get("/join-trainer-collection-bytrainer", async (req, res) => {
+    console.log("Joining Route Collection...");
+    const { trainer_id } = req.body;
+    const joinedResult = await appService.joinTrainerCollection(trainer_id);
+    res.json({data: joinedResult});
+});
+
+router.get("/join-collection-trainerpokemon-bycollection", async (req, res) => {
+    console.log("Joining Collection TrainerPokemon...");
+    const { trainer_id, collection_number } = req.body;
+    const joinedResult = await appService.joinCollectionTrainerPokemon(trainer_id, collection_number);
+    res.json({data: joinedResult});
+});
+
+router.get("/join-pokemon-type-bypokemon", async (req, res) => {
+    console.log("Joining Pokemon Type...");
+    const { pokedex_id } = req.body;
+    const joinedResult = await appService.joinPokemonType(pokedex_id);
+    res.json({data: joinedResult});
+});
+
+router.get("/join-pokemon-move-bypokemon", async (req, res) => {
+    console.log("Joining Pokemon Move...");
+    const { pokedex_id } = req.body;
+    const joinedResult = await appService.joinPokemonMove(pokedex_id);
+    res.json({data: joinedResult});
+});
+
+router.get("/join-pokemon-ability-bypokemon", async (req, res) => {
+    console.log("Joining Pokemon Ability...");
+    const { pokedex_id } = req.body;
+    const joinedResult = await appService.joinPokemonAbility(pokedex_id);
+    res.json({data: joinedResult});
+});
+
+router.get("/evolutionchain-bypokemon", async (req, res) => {
+    console.log("Evolution Chain...");
+    const { pokedex_id } = req.body;
+    const joinedResult = await appService.getEvolutionChain(pokedex_id);
+    res.json({data: joinedResult});
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////// 7. Aggregation with GROUP BY
+router.get("/pokemonavg-bytype", async (req, res) => {
+    console.log("Pokemon Avg By Type...");
+    const joinedResult = await appService.getPokemonAvgByType();
+    res.json({data: joinedResult});
+});
+
+router.get("/pokemoncount-byregion", async (req, res) => {
+    console.log("Pokemon Count By Region...");
+    const joinedResult = await appService.getCountPokemonByRegion();
+    res.json({data: joinedResult});
+});
+
+router.get("/trainercount-byregion", async (req, res) => {
+    console.log("Trainer Count By Region...");
+    const joinedResult = await appService.getRegionCountTrainer();
+    res.json({data: joinedResult});
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////// 8. Aggregation with HAVING
+router.get("/pokemon-byoneroute", async (req, res) => {
+    console.log("Pokemon with >1 Route...");
+    const joinedResult = await appService.getPokemonFoundMoreOneRoute();
+    res.json({data: joinedResult});
+});
+
+router.get("/type-bythreepokemon", async (req, res) => {
+    console.log("Type with >3 Pokemon...");
+    const joinedResult = await appService.getTypeMoreThreePokemon();
+    res.json({data: joinedResult});
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////// 9. Nested Aggregation with GROUP BY
+router.get("/type-byweakpokemon", async (req, res) => {
+    console.log("Weak Type by Total...");
+    const joinedResult = await appService.getPokemonHighAvgByType();
+    res.json({data: joinedResult});
+});
+
+router.get("/region-byspawnrate", async (req, res) => {
+    console.log("Region by above avg spawn rate...");
+    const joinedResult = await appService.getRegionCountAboveAvg();
+    res.json({data: joinedResult});
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////// 10. Division
+router.get("/trainer-byalllevelgroup", async (req, res) => {
+    console.log("Trainer with all leveling group...");
+    const joinedResult = await appService.getTrainerAllLevelingGroup();
+    res.json({data: joinedResult});
+});
 
+router.get("/trainer-byallcollectioncategory", async (req, res) => {
+    console.log("Trainer with all collection category...");
+    const joinedResult = await appService.getTrainerAllCollectionCategory();
+    res.json({data: joinedResult});
+});
 
+router.get("/trainer-byallitemcategory", async (req, res) => {
+    console.log("Trainer with all item category...");
+    const joinedResult = await appService.getTrainerAllItemCategory();
+    res.json({data: joinedResult});
+});
+
+router.get("/pokemon-byallmovecategory", async (req, res) => {
+    console.log("Pokemon with all move category...");
+    const joinedResult = await appService.getPokemonAllMoveCategory();
+    res.json({data: joinedResult});
+});
 
 module.exports = router;

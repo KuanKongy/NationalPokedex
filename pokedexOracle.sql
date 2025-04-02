@@ -563,6 +563,7 @@ INSERT INTO Pokemon1 (to_pokedex_id, pokemon_name, hp, attack, defence, special_
 INSERT INTO Pokemon1 (to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name) VALUES (10005, 'MewTwo', 322, 202, 166, 281, 166, 238, NULL, NULL);
 INSERT INTO Pokemon1 (to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name) VALUES (10006, 'Pikachu', 180, 103, 76, 94, 94, 166, 172, 'HighFriendship'); 
 INSERT INTO Pokemon1 (to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name) VALUES (10007, 'Psyduck', 210, 98, 90, 121, 94, 103, NULL, NULL);
+INSERT INTO Pokemon1 (to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name) VALUES (10008, 'Charizard', 266, 155, 144, 200, 157, 184, 5, 'Level36'); 
 
 INSERT INTO WildPokemon(pokedex_id, spawn_rate, spawn_weather, spawn_time) VALUES (384, 'Limited', 'Windy', 'DayNight');
 INSERT INTO WildPokemon(pokedex_id, spawn_rate, spawn_weather, spawn_time) VALUES (4, 'Common', 'Sunny', 'MorningDayNight');
@@ -585,6 +586,7 @@ INSERT INTO TrainerPokemon2 (pokemon_level, experience, leveling_group) VALUES (
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10000, 10700000, 'Slow', 'Beamer', 8, 300, 807, 1);
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10001, 9100000, 'MediumSlow', 'Charred', 2, 90, 151, 2);
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10005, 10700000, 'Slow', 'MewMew', 2, 122, 1, 4);
+INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10008, 9100000, 'MediumSlow', 'Charred', 2, 90, 2, 4);
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10006, 8600000, 'MediumFast', 'Churizard', 0.4, 6, 2, 4);
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10007, 8600000, 'MediumFast', 'TheDuck', 1, 20, 888, 3);
 INSERT INTO TrainerPokemon1 (pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id) VALUES (10002, 340, 'Slow', 'MewMew', 2, 122, 890, 3);
@@ -622,6 +624,8 @@ INSERT INTO hasMove (move_name, pokedex_id) VALUES ('DragonAscent', 384);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('DragonAscent', 1384);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('DragonAscent', 10000);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('VoltTackle', 10003);
+INSERT INTO hasMove (move_name, pokedex_id) VALUES ('Scratch', 10003);
+INSERT INTO hasMove (move_name, pokedex_id) VALUES ('Agility', 10003);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('VoltTackle', 10006);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('VoltTackle', 172);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('PsychoBoost', 386);
@@ -633,6 +637,8 @@ INSERT INTO hasMove (move_name, pokedex_id) VALUES ('BlastBurn', 2006);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('BlastBurn', 10001);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('Scratch', 513);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('CalmMind', 150);
+INSERT INTO hasMove (move_name, pokedex_id) VALUES ('PsychoBoost', 150);
+INSERT INTO hasMove (move_name, pokedex_id) VALUES ('Scratch', 150);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('CalmMind', 10002);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('CalmMind', 10004);
 INSERT INTO hasMove (move_name, pokedex_id) VALUES ('CalmMind', 10005);
