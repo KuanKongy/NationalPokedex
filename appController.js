@@ -64,5 +64,355 @@ router.get('/count-demotable', async (req, res) => {
     }
 });
 
+////////////////////////////////////////////////////////////////////////////////////////// 1. Insert
+router.post("/insert-pokemon", async (req, res) => {
+    console.log("Inserting Pokemon...");
+    const { to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name, total } = req.body;
+    const insertResult = await appService.insertPokemon(to_pokedex_id, pokemon_name, hp, attack, defence, special_attack, special_defence, speed, from_pokedex_id, req_name, total);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-item", async (req, res) => {
+    console.log("Inserting Item...");
+    const { item_name, item_category, item_effect } = req.body;
+    const insertResult = await appService.insertItem(item_name, item_category, item_effect);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-trainer", async (req, res) => {
+    console.log("Inserting Trainer...");
+    const { trainer_name, rank, trainer_id, region_name } = req.body;
+    const insertResult = await appService.insertTrainer(trainer_name, rank, trainer_id, region_name);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-collection", async (req, res) => {
+    console.log("Inserting Collection...");
+    const { collection_name, collection_category, collection_number, trainer_id } = req.body; //collection_size
+    const insertResult = await appService.insertCollection(collection_name, collection_category, collection_number, trainer_id); //collection_size
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-trainerpokemon", async (req, res) => {
+    console.log("Inserting TrainerPokemon...");
+    const { pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id, pokemon_level } = req.body;
+    const insertResult = await appService.insertTrainerPokemon(pokedex_id, experience, leveling_group, pet_name, height, weight, collection_number, trainer_id, pokemon_level);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-addtype", async (req, res) => {
+    console.log("Inserting Add Type...");
+    const { type_name, pokedex_id } = req.body;
+    const insertResult = await appService.insertAddTypeToPokemon(type_name, pokedex_id);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-addmove", async (req, res) => {
+    console.log("Inserting Add Move...");
+    const { move_name, pokedex_id } = req.body;
+    const insertResult = await appService.insertAddMoveToPokemon(move_name, pokedex_id);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-addability", async (req, res) => {
+    console.log("Inserting Add Ability...");
+    const { ability_name, pokedex_id } = req.body;
+    const insertResult = await appService.insertAddAbilityToPokemon(ability_name, pokedex_id);
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/insert-additem", async (req, res) => {
+    console.log("Inserting Add Item...");
+    const { item_name, trainer_id } = req.body;
+    const insertResult = await appService.insertAddItemToTrainer(item_name, trainer_id);;
+    if (insertResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 2. Update
+router.post("/update-dynamic-trainer", async (req, res) => {
+    console.log("Updating Trainer...");
+    const { updates, trainer_id } = req.body;
+    const updateResult = await appService.updateTrainer(updates, trainer_id);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-collection", async (req, res) => {
+    console.log("Updating Collection...");
+    const { updates, trainer_id, collection_number } = req.body;
+    const updateResult = await appService.updateCollection(updates, trainer_id, collection_number);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-trainerpokemon", async (req, res) => {
+    console.log("Updating TrainerPokemon...");
+    const { inserts, updates, pokedex_id } = req.body;
+    const updateResult = await appService.updateTrainerPokemon(inserts, updates, pokedex_id);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-item", async (req, res) => {
+    console.log("Updating Item...");
+    const { updates, item_name } = req.body;
+    const updateResult = await appService.updateItem(updates, item_name);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-pokemon", async (req, res) => {
+    console.log("Updating Pokemon...");
+    const { inserts, updates, to_pokedex_id } = req.body;
+    const updateResult = await appService.updatePokemon(inserts, updates, to_pokedex_id);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-hasitem", async (req, res) => {
+    console.log("Updating hasItem...");
+    const { updates, item_name, trainer_id } = req.body;
+    const updateResult = await appService.updateHasItem(updates, item_name, trainer_id);
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-hastype", async (req, res) => {
+    console.log("Updating hasType...");
+    const { updates, type_name, pokedex_id } = req.body;
+    const updateResult = await appService.updateHasType(updates, type_name, pokedex_id)
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-hasmove", async (req, res) => {
+    console.log("Updating hasMove...");
+    const { updates, move_name, pokedex_id } = req.body;
+    const updateResult = await appService.updateHasMove(updates, move_name, pokedex_id)
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/update-dynamic-ableto", async (req, res) => {
+    console.log("Updating ableTo...");
+    const { updates, ability_name, pokedex_id } = req.body;
+    const updateResult = await appService.updateAbleTo(updates, ability_name, pokedex_id)
+    if (updateResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 3. Delete
+router.post("/delete-trainer", async (req, res) => {
+    console.log("Deleting Trainer...");
+    const { trainer_id } = req.body;
+    const deleteResult = await appService.deleteTrainer(trainer_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-collection", async (req, res) => {
+    console.log("Deleting Collection...");
+    const { trainer_id, collection_number } = req.body;
+    const deleteResult = await appService.deleteCollection(trainer_id, collection_number);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-trainerpokemon", async (req, res) => {
+    console.log("Deleting TrainerPokemon...");
+    const { pokedex_id } = req.body;
+    const deleteResult = await appService.deleteTrainerPokemon(pokedex_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-item", async (req, res) => {
+    console.log("Deleting Item...");
+    const { item_name } = req.body;
+    const deleteResult = await appService.deleteItem(item_name);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-hasitem", async (req, res) => {
+    console.log("Deleting hasItem...");
+    const { trainer_id, item_name } = req.body;
+    const deleteResult = await appService.deleteHasItem(trainer_id, item_name);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-hastype", async (req, res) => {
+    console.log("Deleting hasType...");
+    const { type_name, pokedex_id } = req.body;
+    const deleteResult = await appService.deleteHasType(type_name, pokedex_id)
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-hasmove", async (req, res) => {
+    console.log("Deleting hasMove...");
+    const { move_name, pokedex_id } = req.body;
+    const deleteResult = await appService.deleteHasMove(move_name, pokedex_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+router.post("/delete-ableto", async (req, res) => {
+    console.log("Deleting ableTo...");
+    const { ability_name, pokedex_id } = req.body;
+    const deleteResult = await appService.deleteAbleTo(ability_name, pokedex_id);
+    if (deleteResult) {
+        res.json({ success: true });
+    } else {
+        res.status(500).json({ success: false });
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 4. Selection
+router.get("/select-filters-item", async (req, res) => {
+    console.log("Selecting Item...");
+    const { filters } = req.body;
+    const selectResult = await appService.selectItem(filters);
+    res.json({data: selectResult});
+});
+
+router.get("/select-filters-pokemon", async (req, res) => {
+    console.log("Selecting Pokemon...");
+    const { filters } = req.body;
+    const selectResult = await appService.selectPokemon(filters);
+    res.json({data: selectResult});
+});
+
+router.get("/select-filters-trainerpokemon", async (req, res) => {
+    console.log("Selecting TrainerPokemon...");
+    const { filters } = req.body;
+    const selectResult = await appService.selectTrainerPokemon(filters);
+    res.json({data: selectResult});
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 5. Projection
+router.get("/project-selected-pokemon", async (req, res) => {
+    console.log("Projecting Pokemon...");
+    const { selectedAttributes } = req.body;
+    const projectedResult = await appService.projectPokemon(selectedAttributes);
+    res.json({data: projectedResult});
+});
+
+router.get("/project-selected-item", async (req, res) => {
+    console.log("Projecting Item...");
+    const { selectedAttributes } = req.body;
+    const projectedResult = await appService.projectItem(selectedAttributes);
+    res.json({data: projectedResult});
+});
+
+router.get("/project-selected-trainerpokemon", async (req, res) => {
+    console.log("Projecting TrainerPokemon...");
+    const { selectedAttributes } = req.body;
+    const projectedResult = await appService.projectTrainerPokemon(selectedAttributes);
+    res.json({data: projectedResult});
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 6. Join
+router.get("/join-route-wildpokemon-byroute", async (req, res) => {
+    console.log("Joining Route WildPokemon...");
+    const { route_name } = req.body;
+    const joinedResult = await appService.joinRouteWildPokemon(route_name);
+    res.json({data: joinedResult});
+});
+
+////////////////////////////////////////////////////////////////////////////////////////// 7. Aggregation with GROUP BY
+
+////////////////////////////////////////////////////////////////////////////////////////// 8. Aggregation with HAVING
+
+////////////////////////////////////////////////////////////////////////////////////////// 9. Nested Aggregation with GROUP BY
+
+////////////////////////////////////////////////////////////////////////////////////////// 10. Division
+
+
 
 module.exports = router;
