@@ -404,6 +404,12 @@ router.get("/project-regions", async (req, res) => {
     res.json({data: projectedResult});
 });
 
+router.get("/project-trainers", async (req, res) => {
+    console.log("Projecting Trainers...");
+    const projectedResult = await appService.projectTrainer();
+    res.json({data: projectedResult});
+});
+
 router.get("/project-types", async (req, res) => {
     console.log("Projecting Types...");
     const projectedResult = await appService.projectTypes();

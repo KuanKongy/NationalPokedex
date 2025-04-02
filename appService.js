@@ -925,6 +925,16 @@ async function projectRegions() {
     });
 }
 
+async function projectTrainer() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Trainer`);
+
+        return result.rows;
+    }).catch(() => {
+        return false;
+    });
+}
+
 async function projectTypes() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Type`);
@@ -1412,6 +1422,7 @@ module.exports = {
     projectItem,
     projectTrainerPokemon,
     projectRegions,
+    projectTrainer,
     projectTypes,
     projectMoves,
     projectAbilities,
