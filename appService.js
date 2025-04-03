@@ -765,7 +765,12 @@ async function selectItem(filters) {
             baseQuery,
             bindParams
         );
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -798,7 +803,12 @@ async function selectPokemon(filters) {
             baseQuery,
             bindParams
         );
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -831,7 +841,12 @@ async function selectTrainerPokemon(filters) {
             baseQuery,
             bindParams
         );
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -855,11 +870,16 @@ async function projectPokemon(selectedAttributes) {
         // }
 
         const attributes = selectedAttributes.join(", ");
-        const query = `SELECT ${attributes} FROM Pokemon`;
+        const query = `SELECT ${attributes} FROM Pokemon ORDER BY pokedex_id`;//FETCH FIRST 10 ROWS ONLY
 
         const result = await connection.execute(query);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -884,7 +904,12 @@ async function projectItem(selectedAttributes) {
 
         const result = await connection.execute(query);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -909,7 +934,42 @@ async function projectTrainerPokemon(selectedAttributes) {
 
         const result = await connection.execute(query);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function projectCollection(selectedAttributes) {
+    return await withOracleDB(async (connection) => {
+        const countQuery = `SELECT COUNT(*) FROM Collection`;
+        const countResult = await connection.execute(countQuery);
+        const rowCount = countResult.rows[0][0];
+
+        if (selectedAttributes.length === 0) {
+            return Array(rowCount).fill([]);
+        }
+
+        // if (selectedAttributes.length === 0) {
+        //     return [];
+        // }
+
+        const attributes = selectedAttributes.join(", ");
+        const query = `SELECT DISTINCT ${attributes} FROM Collection`;
+
+        const result = await connection.execute(query);
+
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -919,7 +979,12 @@ async function projectRegions() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Region`);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -929,7 +994,12 @@ async function projectTrainer() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Trainer`);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -938,8 +1008,12 @@ async function projectTrainer() {
 async function projectTypes() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Type`);
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
 
-        return result.rows;
+        return results;
     }).catch(() => {
         return false;
     });
@@ -949,7 +1023,12 @@ async function projectMoves() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Move`);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -959,12 +1038,31 @@ async function projectAbilities() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(`SELECT * FROM Ability`);
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
 }
 
+async function projectItems() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(`SELECT * FROM Item`);
+
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
+    }).catch(() => {
+        return false;
+    });
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////// 6. Join
 async function joinRegionRoute(region_name) {
@@ -984,7 +1082,12 @@ async function joinRegionRoute(region_name) {
             {region_name}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1009,7 +1112,12 @@ async function joinRouteWildPokemon(route_name) {
             {route_name}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1029,7 +1137,12 @@ async function joinTrainerItem(trainer_id) {
             {trainer_id}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1051,7 +1164,12 @@ async function joinTrainerCollection(trainer_id) {
             {trainer_id}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1069,7 +1187,10 @@ async function joinCollectionTrainerPokemon(trainer_id, collection_number) {
                 tp.pokedex_id, 
                 tp.pet_name, 
                 tp.pokemon_level, 
-                tp.experience
+                tp.experience,
+                tp.height,
+                tp.weight,
+                tp.leveling_group
             FROM Collection c
             JOIN TrainerPokemon tp 
             ON c.trainer_id = tp.trainer_id AND c.collection_number = tp.collection_number
@@ -1077,7 +1198,12 @@ async function joinCollectionTrainerPokemon(trainer_id, collection_number) {
             {trainer_id, collection_number}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1155,11 +1281,18 @@ async function getEvolutionChain(pokedex_id) {
                 SELECT :pokedex_id FROM DUAL
             )
             START WITH p.pokedex_id = :pokedex_id
-            CONNECT BY PRIOR p.pokedex_id = p.from_pokedex_id`,
+            CONNECT BY NOCYCLE PRIOR p.pokedex_id = p.from_pokedex_id  
+                    OR PRIOR p.from_pokedex_id = p.pokedex_id
+            ORDER BY p.pokedex_id ASC`,
             {pokedex_id}
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1184,7 +1317,12 @@ async function getPokemonAvgByType() {
             GROUP BY ht.type_name`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1202,7 +1340,12 @@ async function getCountPokemonByRegion() {
             ORDER BY num_pokemon DESC`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1216,8 +1359,12 @@ async function getRegionCountTrainer() {
             GROUP BY region_name
             ORDER BY trainer_count DESC`
         );
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
 
-        return result.rows;
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1228,13 +1375,19 @@ async function getRegionCountTrainer() {
 async function getPokemonFoundMoreOneRoute() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT pokedex_id, COUNT(route_name) AS num_routes
-            FROM foundAt
-            GROUP BY pokedex_id
+            `SELECT p.pokedex_id, p.pokemon_name, COUNT(fa.route_name) AS num_routes
+            FROM foundAt fa
+            JOIN Pokemon p ON fa.pokedex_id = p.pokedex_id
+            GROUP BY p.pokedex_id, p.pokemon_name
             HAVING COUNT(route_name) > 1`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1250,7 +1403,12 @@ async function getTypeMoreThreePokemon() {
             HAVING COUNT(*) > 3`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1261,14 +1419,40 @@ async function getTypeMoreThreePokemon() {
 async function getPokemonHighAvgByType() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT ht.type_name, AVG(p.total) AS total_avg
+            `SELECT ht.type_name, AVG(p.total) AS total_avg, COUNT(*) AS pokemon_count
             FROM Pokemon p
             JOIN hasType ht ON ht.pokedex_id = p.pokedex_id
             GROUP BY ht.type_name
-            HAVING AVG(p.total) <= (SELECT AVG(p1.total) FROM Pokemon p1)`
+            HAVING AVG(p.total) <= (SELECT AVG(p1.total) FROM Pokemon p1)
+            ORDER BY AVG(p.total) ASC`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
+    }).catch(() => {
+        return false;
+    });
+}
+
+async function getPokemonHighAvg() {
+    return await withOracleDB(async (connection) => {
+        const result = await connection.execute(
+            `SELECT p.pokedex_id, AVG(p.total) AS total_avg
+            FROM Pokemon p
+            GROUP BY p.pokedex_id
+            HAVING AVG(p.total) >= (SELECT AVG(p1.total) FROM Pokemon p1)`
+        );
+
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1291,7 +1475,12 @@ async function getRegionCountAboveAvg() {
             )`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1312,7 +1501,12 @@ async function getTrainerAllLevelingGroup() {
             )`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1331,7 +1525,12 @@ async function getTrainerAllCollectionCategory() {
             )`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1351,7 +1550,12 @@ async function getTrainerAllItemCategory() {
             )`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1360,19 +1564,24 @@ async function getTrainerAllItemCategory() {
 async function getPokemonAllMoveCategory() {
     return await withOracleDB(async (connection) => {
         const result = await connection.execute(
-            `SELECT P.to_pokedex_id
-            FROM Pokemon1 P
+            `SELECT P.pokedex_id, P.pokemon_name, P.total
+            FROM Pokemon P
             WHERE NOT EXISTS (
                 SELECT DISTINCT M.move_category FROM Move2 M
                 MINUS
                 SELECT DISTINCT M2.move_category FROM hasMove HM
                 JOIN Move1 M1 ON HM.move_name = M1.move_name
                 JOIN Move2 M2 ON M1.move_effect = M2.move_effect
-                WHERE HM.pokedex_id = P.to_pokedex_id
+                WHERE HM.pokedex_id = P.pokedex_id
             )`
         );
 
-        return result.rows;
+        const columns = result.metaData.map(col => col.name);
+        const results = result.rows.map(row => 
+            Object.fromEntries(row.map((value, index) => [columns[index], value]))
+        );
+
+        return results;
     }).catch(() => {
         return false;
     });
@@ -1426,6 +1635,8 @@ module.exports = {
     projectTypes,
     projectMoves,
     projectAbilities,
+    projectItems,
+    projectCollection,
     joinRegionRoute,
     joinRouteWildPokemon,
     joinTrainerItem,

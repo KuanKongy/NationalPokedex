@@ -355,21 +355,21 @@ router.post("/delete-ableto", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////// 4. Selection
-router.get("/select-filters-item", async (req, res) => {
+router.post("/select-filters-item", async (req, res) => {
     console.log("Selecting Item...");
     const { filters } = req.body;
     const selectResult = await appService.selectItem(filters);
     res.json({data: selectResult});
 });
 
-router.get("/select-filters-pokemon", async (req, res) => {
+router.post("/select-filters-pokemon", async (req, res) => {
     console.log("Selecting Pokemon...");
     const { filters } = req.body;
     const selectResult = await appService.selectPokemon(filters);
     res.json({data: selectResult});
 });
 
-router.get("/select-filters-trainerpokemon", async (req, res) => {
+router.post("/select-filters-trainerpokemon", async (req, res) => {
     console.log("Selecting TrainerPokemon...");
     const { filters } = req.body;
     const selectResult = await appService.selectTrainerPokemon(filters);
@@ -377,24 +377,31 @@ router.get("/select-filters-trainerpokemon", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////// 5. Projection
-router.get("/project-selected-pokemon", async (req, res) => {
+router.post("/project-selected-pokemon", async (req, res) => {
     console.log("Projecting Pokemon...");
     const { selectedAttributes } = req.body;
     const projectedResult = await appService.projectPokemon(selectedAttributes);
     res.json({data: projectedResult});
 });
 
-router.get("/project-selected-item", async (req, res) => {
+router.post("/project-selected-item", async (req, res) => {
     console.log("Projecting Item...");
     const { selectedAttributes } = req.body;
     const projectedResult = await appService.projectItem(selectedAttributes);
     res.json({data: projectedResult});
 });
 
-router.get("/project-selected-trainerpokemon", async (req, res) => {
+router.post("/project-selected-trainerpokemon", async (req, res) => {
     console.log("Projecting TrainerPokemon...");
     const { selectedAttributes } = req.body;
     const projectedResult = await appService.projectTrainerPokemon(selectedAttributes);
+    res.json({data: projectedResult});
+});
+
+router.post("/project-selected-collection", async (req, res) => {
+    console.log("Projecting Collection...");
+    const { selectedAttributes } = req.body;
+    const projectedResult = await appService.projectCollection(selectedAttributes);
     res.json({data: projectedResult});
 });
 
@@ -428,36 +435,42 @@ router.get("/project-abilities", async (req, res) => {
     res.json({data: projectedResult});
 });
 
+router.get("/project-items", async (req, res) => {
+    console.log("Projecting Items...");
+    const projectedResult = await appService.projectItems();
+    res.json({data: projectedResult});
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////// 6. Join
-router.get("/join-region-route-byregion", async (req, res) => {
+router.post("/join-region-route-byregion", async (req, res) => {
     console.log("Joining Region Route...");
     const { region_name } = req.body;
     const joinedResult = await appService.joinRegionRoute(region_name);
     res.json({data: joinedResult});
 });
 
-router.get("/join-route-wildpokemon-byroute", async (req, res) => {
+router.post("/join-route-wildpokemon-byroute", async (req, res) => {
     console.log("Joining Route WildPokemon...");
     const { route_name } = req.body;
     const joinedResult = await appService.joinRouteWildPokemon(route_name);
     res.json({data: joinedResult});
 });
 
-router.get("/join-trainer-item-bytrainer", async (req, res) => {
+router.post("/join-trainer-item-bytrainer", async (req, res) => {
     console.log("Joining Trainer Item...");
     const { trainer_id } = req.body;
     const joinedResult = await appService.joinTrainerItem(trainer_id);
     res.json({data: joinedResult});
 });
 
-router.get("/join-trainer-collection-bytrainer", async (req, res) => {
+router.post("/join-trainer-collection-bytrainer", async (req, res) => {
     console.log("Joining Route Collection...");
     const { trainer_id } = req.body;
     const joinedResult = await appService.joinTrainerCollection(trainer_id);
     res.json({data: joinedResult});
 });
 
-router.get("/join-collection-trainerpokemon-bycollection", async (req, res) => {
+router.post("/join-collection-trainerpokemon-bycollection", async (req, res) => {
     console.log("Joining Collection TrainerPokemon...");
     const { trainer_id, collection_number } = req.body;
     const joinedResult = await appService.joinCollectionTrainerPokemon(trainer_id, collection_number);
@@ -485,7 +498,7 @@ router.get("/join-pokemon-ability-bypokemon", async (req, res) => {
     res.json({data: joinedResult});
 });
 
-router.get("/evolutionchain-bypokemon", async (req, res) => {
+router.post("/evolutionchain-bypokemon", async (req, res) => {
     console.log("Evolution Chain...");
     const { pokedex_id } = req.body;
     const joinedResult = await appService.getEvolutionChain(pokedex_id);

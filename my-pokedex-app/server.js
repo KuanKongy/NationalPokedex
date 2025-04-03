@@ -1,25 +1,13 @@
-// const express = require('express');
-import express from "express";
-// const appController = require('./appController');
-import appController from "./appController.js";
+const express = require('express');
+const appController = require('./appController');
 
 // Load environment variables from .env file
 // Ensure your .env file has the required database credentials.
-// const loadEnvFile = require('./utils/envUtil');
-import loadEnvFile from "./utils/envUtil.js";
+const loadEnvFile = require('./utils/envUtil');
 const envVariables = loadEnvFile('./.env');
 
 const app = express();
-const PORT = 2424; //envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
-import cors from "cors";
-// app.use(cors());
-app.use(
-    cors({
-      origin: "http://localhost:5173",
-      credentials: true, // Allows cookies and authentication headers
-    })
-  );
-  
+const PORT = envVariables.PORT || 65534;  // Adjust the PORT if needed (e.g., if you encounter a "port already occupied" error)
 
 // Middleware setup
 app.use(express.static('public'));  // Serve static files from the 'public' directory
