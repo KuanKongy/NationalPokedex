@@ -166,6 +166,8 @@ router.post("/insert-additem", async (req, res) => {
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////// 2. Update
+// Oracle doesn't have Cascade, but it should cascade when we update primary keys
+
 router.post("/update-dynamic-trainer", async (req, res) => {
     console.log("Updating Trainer...");
     const { updates, trainer_id } = req.body;

@@ -40,6 +40,11 @@ const TrainerPage = () => {
         });
         const data = await response.json();
         if (!data.success) throw new Error("Failed to delete trainer");
+        if (!data.success) {
+          alert("Error deleting trainers");
+        } else {
+          alert("Succees deleting trainers");
+        }
         return data;
       };
 
@@ -71,7 +76,9 @@ const TrainerPage = () => {
               const data = await response.json();
               console.log(data.success);
               if (!data.success) {
-                alert("Error fetching trainers");
+                alert("Error adding trainers");
+              } else {
+                alert("Succees adding trainers");
               }
               return data.success;
           } catch (error) {
@@ -136,6 +143,11 @@ const updateTrainerMutation = useMutation({
       });
       const data = await response.json();
       if (!data.success) throw new Error("Failed to update trainer");
+      if (!data.success) {
+        alert("Error updating trainers");
+      } else {
+        alert("Succees updating trainers");
+      }
       return data;
     },
     onSuccess: () => {
