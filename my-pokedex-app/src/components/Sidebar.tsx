@@ -25,8 +25,6 @@ const Sidebar = () => {
             <Box w="full" p={3} borderRadius="md" ><Link href="./">Pokemon Filter</Link></Box>
             <Box w="full" p={3} borderRadius="md" ><Link href="./list">Pokemon by Columns</Link></Box>
             <Box w="full" p={3} borderRadius="md" ><Link href="./trainer">Trainer Profiles</Link></Box>
-            <Box w="full" p={3} borderRadius="md" ><Link href="./trainerpage">Trainer Page</Link></Box>
-            <Box w="full" p={3} borderRadius="md" ><Link href="./evolution">Evolution Checker</Link></Box>
             <Box w="full" p={3} borderRadius="md" ><Link href="./regionmap">Regions Map</Link></Box>
             <Box w="full" p={3} borderRadius="md" ><Link href="./statistics">Pokemon info</Link></Box>
             </Drawer.Body>
